@@ -1165,7 +1165,7 @@ if (fileInputRef.current) {
           }}
         >
           <option value="withdrawn">Withdrawn</option>
-          <option value="truckInventory">Added to Truck Inventory</option>
+          <option value="truckInventory">Transfer to Truck Inventory</option>
           <option value="audit">Inventory Audit</option>
           <option value="newInventory">New Inventory</option>
         </select>
@@ -1419,7 +1419,7 @@ const runningTotal = changeHistory
                 padding: '16px', 
                 borderBottom: '1px solid #E5E7EB'
               }}>
-                    {change.type === 'truckInventory' ? 'Added to Truck Inventory' : 
+                    {change.type === 'truckInventory' ? 'Transfer to Truck Inventory' : 
                      change.type === 'withdrawn' ? 'Withdrawn' :
                      change.type === 'audit' ? 'Inventory Audit' :
                      change.type === 'newInventory' ? 'New Inventory' :
