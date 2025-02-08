@@ -383,21 +383,14 @@ if (fileInputRef.current) {
             Monitor and manage chemical inventory across all locations
           </p>
         </div>
-
-{/* Chemical Selection Bar */}
-        <div style={{ 
-          padding: '16px 24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          borderTop: '1px solid rgba(255,255,255,0.1)',
-          background: '#FAFAFA'
-        }}>
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '12px'
-          }}>
+  
+        {/* Chemical Selection Bar */}
+        <div className="p-4 md:p-6 flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0" 
+             style={{
+               borderTop: '1px solid rgba(255,255,255,0.1)',
+               background: '#FAFAFA'
+             }}>
+          <div className="flex items-center gap-3">
             <div style={{ 
               background: '#1E40AF',
               width: '32px',
@@ -415,8 +408,8 @@ if (fileInputRef.current) {
             <select
               value={selectedChemicals[0] || ''}
               onChange={(e) => setSelectedChemicals([e.target.value])}
+              className="w-full md:w-60"
               style={{ 
-                width: '240px',
                 padding: '8px 12px',
                 borderRadius: '8px',
                 border: '1px solid #E5E7EB',
@@ -439,59 +432,57 @@ if (fileInputRef.current) {
               ))}
             </select>
           </div>
-
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '24px' 
-          }}>
-           <div style={{ 
-  display: 'flex', 
-  alignItems: 'center', 
-  gap: '12px',
-  background: 'white',
-  padding: '8px 16px',
-  borderRadius: '24px',
-  boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
-}}>
-  <div style={{
-    width: '32px',
-    height: '32px',
-    borderRadius: '50%',
-    background: '#1E40AF',
-    color: 'white',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontWeight: '500',
-    fontSize: '16px'
-  }}>
-    {user.name.charAt(0)}
-  </div>
-  <div style={{
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '2px'
-  }}>
-    <p style={{
-      fontSize: '14px',
-      color: '#1F2937',
-      fontWeight: '500',
-      margin: 0
-    }}>
-      {user.name}
-    </p>
-    <p style={{
-      fontSize: '12px',
-      color: '#6B7280',
-      margin: 0
-    }}>
-      {user.email}
-    </p>
-  </div>
-</div>
+  
+          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4">
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '12px',
+              background: 'white',
+              padding: '8px 16px',
+              borderRadius: '24px',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+            }}>
+              <div style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                background: '#1E40AF',
+                color: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: '500',
+                fontSize: '16px'
+              }}>
+                {user.name.charAt(0)}
+              </div>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '2px'
+              }}>
+                <p style={{
+                  fontSize: '14px',
+                  color: '#1F2937',
+                  fontWeight: '500',
+                  margin: 0
+                }}>
+                  {user.name}
+                </p>
+                <p style={{
+                  fontSize: '12px',
+                  color: '#6B7280',
+                  margin: 0
+                }}>
+                  {user.email}
+                </p>
+              </div>
+            </div>
+            
             <button
               onClick={() => setShowAddChemical(true)}
+              className="w-full md:w-auto"
               style={{
                 padding: '8px 16px',
                 borderRadius: '8px',
