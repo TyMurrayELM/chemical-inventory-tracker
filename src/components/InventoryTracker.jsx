@@ -385,138 +385,156 @@ if (fileInputRef.current) {
         </div>
 
 {/* Chemical Selection Bar */}
-        <div style={{ 
-          padding: '16px 24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          borderTop: '1px solid rgba(255,255,255,0.1)',
-          background: '#FAFAFA'
-        }}>
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '12px'
-          }}>
-            <div style={{ 
-              background: '#1E40AF',
-              width: '32px',
-              height: '32px',
-              borderRadius: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              fontSize: '20px',
-              fontWeight: '500'
-            }}>
-              +
-            </div>
-            <select
-              value={selectedChemicals[0] || ''}
-              onChange={(e) => setSelectedChemicals([e.target.value])}
-              style={{ 
-                width: '240px',
-                padding: '8px 12px',
-                borderRadius: '8px',
-                border: '1px solid #E5E7EB',
-                backgroundColor: 'white',
-                color: '#1F2937',
-                fontSize: '14px',
-                fontWeight: '500',
-                boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-                appearance: 'none',
-                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E")`,
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right 8px center',
-                backgroundSize: '20px 20px',
-                paddingRight: '32px'
-              }}
-            >
-              <option value="">Select a Chemical</option>
-              {inventory.map(item => (
-                <option key={item.id} value={item.name}>{item.name}</option>
-              ))}
-            </select>
-          </div>
-
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '24px' 
-          }}>
-           <div style={{ 
-  display: 'flex', 
-  alignItems: 'center', 
-  gap: '12px',
-  background: 'white',
-  padding: '8px 16px',
-  borderRadius: '24px',
-  boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
-}}>
-  <div style={{
-    width: '32px',
-    height: '32px',
-    borderRadius: '50%',
-    background: '#1E40AF',
-    color: 'white',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontWeight: '500',
-    fontSize: '16px'
-  }}>
-    {user.name.charAt(0)}
-  </div>
-  <div style={{
-    display: 'flex',
+<div style={{ 
+  padding: '16px 24px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  borderTop: '1px solid rgba(255,255,255,0.1)',
+  background: '#FAFAFA',
+  '@media (max-width: 768px)': {
     flexDirection: 'column',
-    gap: '2px'
+    alignItems: 'stretch',
+    gap: '16px'
+  }
+}}>
+  <div style={{ 
+    display: 'flex', 
+    alignItems: 'center', 
+    gap: '12px'
   }}>
-    <p style={{
-      fontSize: '14px',
-      color: '#1F2937',
-      fontWeight: '500',
-      margin: 0
+    <div style={{ 
+      background: '#1E40AF',
+      width: '32px',
+      height: '32px',
+      borderRadius: '8px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: 'white',
+      fontSize: '20px',
+      fontWeight: '500'
     }}>
-      {user.name}
-    </p>
-    <p style={{
-      fontSize: '12px',
-      color: '#6B7280',
-      margin: 0
+      +
+    </div>
+    <select
+      value={selectedChemicals[0] || ''}
+      onChange={(e) => setSelectedChemicals([e.target.value])}
+      style={{ 
+        width: '240px',
+        padding: '8px 12px',
+        borderRadius: '8px',
+        border: '1px solid #E5E7EB',
+        backgroundColor: 'white',
+        color: '#1F2937',
+        fontSize: '14px',
+        fontWeight: '500',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+        appearance: 'none',
+        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E")`,
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'right 8px center',
+        backgroundSize: '20px 20px',
+        paddingRight: '32px',
+        '@media (max-width: 768px)': {
+          width: '100%'
+        }
+      }}
+    >
+      <option value="">Select a Chemical</option>
+      {inventory.map(item => (
+        <option key={item.id} value={item.name}>{item.name}</option>
+      ))}
+    </select>
+  </div>
+
+  <div style={{ 
+    display: 'flex', 
+    alignItems: 'center', 
+    gap: '24px',
+    '@media (max-width: 768px)': {
+      flexDirection: 'column',
+      alignItems: 'stretch',
+      gap: '16px'
+    }
+  }}>
+    <div style={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      gap: '12px',
+      background: 'white',
+      padding: '8px 16px',
+      borderRadius: '24px',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
     }}>
-      {user.email}
-    </p>
+      <div style={{
+        width: '32px',
+        height: '32px',
+        borderRadius: '50%',
+        background: '#1E40AF',
+        color: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontWeight: '500',
+        fontSize: '16px'
+      }}>
+        {user.name.charAt(0)}
+      </div>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '2px'
+      }}>
+        <p style={{
+          fontSize: '14px',
+          color: '#1F2937',
+          fontWeight: '500',
+          margin: 0
+        }}>
+          {user.name}
+        </p>
+        <p style={{
+          fontSize: '12px',
+          color: '#6B7280',
+          margin: 0
+        }}>
+          {user.email}
+        </p>
+      </div>
+    </div>
+    
+    <button
+      onClick={() => setShowAddChemical(true)}
+      style={{
+        padding: '8px 16px',
+        borderRadius: '8px',
+        background: '#1E40AF',
+        color: 'white',
+        border: 'none',
+        cursor: 'pointer',
+        fontWeight: '500',
+        fontSize: '14px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+        transition: 'all 0.2s',
+        '@media (max-width: 768px)': {
+          width: '100%',
+          justifyContent: 'center'
+        }
+      }}
+    >
+      <span style={{ 
+        fontSize: '20px', 
+        display: 'flex', 
+        alignItems: 'center' 
+      }}>+</span>
+      Add New Chemical
+    </button>
   </div>
 </div>
-            <button
-              onClick={() => setShowAddChemical(true)}
-              style={{
-                padding: '8px 16px',
-                borderRadius: '8px',
-                background: '#1E40AF',
-                color: 'white',
-                border: 'none',
-                cursor: 'pointer',
-                fontWeight: '500',
-                fontSize: '14px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-                transition: 'all 0.2s'
-              }}
-            >
-              <span style={{ 
-                fontSize: '20px', 
-                display: 'flex', 
-                alignItems: 'center' 
-              }}>+</span>
-              Add New Chemical
-            </button>
-          </div>
-        </div>
       </div>
 
 
