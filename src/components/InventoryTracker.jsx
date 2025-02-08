@@ -6,6 +6,7 @@ import swLogo from '../assets/icons/sw.png';
 import seLogo from '../assets/icons/se.png';
 import fullLogo from '../assets/logos/full.png';
 import agave from '../assets/logos/agave.png';  // Adjust the path based on your project structure
+import CustomLocationSelect from './CustomLocationSelect';
 
 
 const LOCATIONS = {
@@ -1081,41 +1082,14 @@ if (fileInputRef.current) {
         </select>
       </div>
       
-      {/* Location Selection */}
-      <div>
-        <label style={{ 
-          display: 'block', 
-          marginBottom: '8px',
-          fontWeight: '500',
-          color: '#374151'
-        }}>
-          Location
-        </label>
-        <select 
-          value={selectedLocation}
-          onChange={(e) => setSelectedLocation(e.target.value)}
-          style={{ 
-            width: '100%', 
-            padding: '10px 12px', 
-            borderRadius: '6px', 
-            border: '1px solid #D1D5DB',
-            backgroundColor: 'white',
-            color: '#1F2937',
-            fontSize: '14px'
-          }}
-        >
-          <optgroup label="Branch Locations">
-            {Object.entries(LOCATIONS).map(([key, location]) => (
-              <option key={key} value={key}>{location.name}</option>
-            ))}
-          </optgroup>
-          <optgroup label="Truck Inventory">
-            {Object.entries(LOCATIONS).map(([key, location]) => (
-              <option key={`${key}-truck`} value={`${key}-truck`}>{location.name} (Truck Inventory)</option>
-            ))}
-          </optgroup>
-        </select>
-      </div>
+ {/* Location Selection */}
+<div>
+  <CustomLocationSelect
+    selectedLocation={selectedLocation}
+    onLocationChange={setSelectedLocation}
+    LOCATIONS={LOCATIONS}
+  />
+</div>
 
       {/* Amount Input Group */}
       <div>
