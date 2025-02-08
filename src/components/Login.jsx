@@ -1,5 +1,6 @@
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
+import fullLogo from '../assets/logos/full.png';
 
 const Login = ({ onLogin }) => {
   return (
@@ -18,6 +19,15 @@ const Login = ({ onLogin }) => {
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
         textAlign: 'center'
       }}>
+        <img 
+          src={fullLogo} 
+          alt="Company Logo" 
+          style={{
+            maxWidth: '300px',
+            height: 'auto',
+            marginBottom: '20px'
+          }}
+        />
         <h1 style={{ marginBottom: '2rem', color: '#1F2937' }}>Inventory Tracker</h1>
         <GoogleLogin
           onSuccess={credentialResponse => {

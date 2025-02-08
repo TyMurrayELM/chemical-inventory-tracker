@@ -4,6 +4,8 @@ import { supabase } from '../supabaseClient';
 import nLogo from '../assets/icons/n.png';
 import swLogo from '../assets/icons/sw.png';
 import seLogo from '../assets/icons/se.png';
+import fullLogo from '../assets/logos/full.png';
+
 
 const LOCATIONS = {
   'PHX-N': { name: 'Phx - N', color: '#10B981', icon: nLogo },  // Green
