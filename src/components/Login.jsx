@@ -28,20 +28,26 @@ const Login = ({ onLogin }) => {
             marginBottom: '20px'
           }}
         />
-        <h1 style={{ marginBottom: '2rem', color: '#1F2937' }}>Inventory Tracker</h1>
-        <GoogleLogin
-          onSuccess={credentialResponse => {
-            const decoded = jwtDecode(credentialResponse.credential);
-            if (decoded.email.endsWith('@encorelm.com')) {
-              onLogin(decoded);
-            } else {
-              alert('Please use your encorelm.com email to login');
-            }
-          }}
-          onError={() => {
-            console.log('Login Failed');
-          }}
-        />
+        <h1 style={{ marginBottom: '2rem', color: '#1F2937' }}>Spray Division Inventory Tracker</h1>
+        <div style={{ 
+          display: 'flex',
+          justifyContent: 'center',
+          width: '100%'
+        }}>
+          <GoogleLogin
+            onSuccess={credentialResponse => {
+              const decoded = jwtDecode(credentialResponse.credential);
+              if (decoded.email.endsWith('@encorelm.com')) {
+                onLogin(decoded);
+              } else {
+                alert('Please use your encorelm.com email to login');
+              }
+            }}
+            onError={() => {
+              console.log('Login Failed');
+            }}
+          />
+        </div>
       </div>
     </div>
   );
