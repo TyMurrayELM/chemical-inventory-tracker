@@ -19,16 +19,20 @@ const Login = ({ onLogin }) => {
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
         textAlign: 'center'
       }}>
-        <img 
+       <img 
           src={fullLogo} 
           alt="Company Logo" 
           style={{
-            maxWidth: '300px',
+            maxWidth: '250px',
             height: 'auto',
             marginBottom: '20px'
           }}
         />
-        <h1 style={{ marginBottom: '2rem', color: '#1F2937' }}>Spray Division Inventory Tracker</h1>
+        <h1 style={{ 
+          marginBottom: '2rem', 
+          color: '#1F2937',
+          fontSize: '1.5rem'  // Reduced from default h1 size
+        }}>Spray Division Inventory Tracker</h1>
         <div style={{ 
           display: 'flex',
           justifyContent: 'center',
