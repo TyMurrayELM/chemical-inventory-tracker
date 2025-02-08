@@ -18,7 +18,7 @@ const Login = ({ onLogin }) => {
         borderRadius: '8px',
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
         textAlign: 'center',
-        width: '90%',  // Takes up 90% of screen width on mobile
+        width: '70%',  // Takes up 90% of screen width on mobile
         maxWidth: '400px',  // But never gets wider than 400px on desktop
         margin: '0 auto'
       }}>
