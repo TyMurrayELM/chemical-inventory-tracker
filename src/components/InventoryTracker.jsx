@@ -316,25 +316,65 @@ if (isTruckLocation) {
         }
       }
   
-      // Record in change history
-      const { data: insertedHistory, error: historyError } = await supabase
-        .from('change_history')
-        .insert([{
-          chemical_id: chemical.id,
-          location: selectedLocation,
-          amount: convertedAmount,
-          type: changeHistoryType, // Use our separate type variable
-          user_email: user.email,
-          user_name: user.name,
-          attachment_url: attachmentUrl,
-          created_at: new Date().toISOString()
-        }])
-        .select();
-  
-      if (historyError) {
-        console.error('History insert error:', historyError);
-        throw historyError;
-      }
+// Record in change history
+if (inventoryType === 'truckInventory') {
+  // First record - reduction from branch inventory
+  const { error: historyError1 } = await supabase
+    .from('change_history')
+    .insert([{
+      chemical_id: chemical.id,
+      location: baseLocation,  // Branch location
+      amount: -Math.abs(convertedAmount),  // Negative amount for reduction
+      type: changeHistoryType,
+      user_email: user.email,
+      user_name: user.name,
+      attachment_url: attachmentUrl,
+      created_at: new Date().toISOString()
+    }]);
+
+  if (historyError1) {
+    console.error('History insert error 1:', historyError1);
+    throw historyError1;
+  }
+
+  // Second record - increase in truck inventory
+  const { error: historyError2 } = await supabase
+    .from('change_history')
+    .insert([{
+      chemical_id: chemical.id,
+      location: `${baseLocation}-truck`,  // Truck location
+      amount: Math.abs(convertedAmount),  // Positive amount for increase
+      type: changeHistoryType,
+      user_email: user.email,
+      user_name: user.name,
+      attachment_url: attachmentUrl,
+      created_at: new Date().toISOString()
+    }]);
+
+  if (historyError2) {
+    console.error('History insert error 2:', historyError2);
+    throw historyError2;
+  }
+} else {
+  // Regular history record for other types
+  const { error: historyError } = await supabase
+    .from('change_history')
+    .insert([{
+      chemical_id: chemical.id,
+      location: selectedLocation,
+      amount: convertedAmount,
+      type: changeHistoryType,
+      user_email: user.email,
+      user_name: user.name,
+      attachment_url: attachmentUrl,
+      created_at: new Date().toISOString()
+    }]);
+
+  if (historyError) {
+    console.error('History insert error:', historyError);
+    throw historyError;
+  }
+}
   
       // Refresh data
       await fetchData();
