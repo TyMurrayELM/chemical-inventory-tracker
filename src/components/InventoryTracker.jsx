@@ -354,7 +354,15 @@ if (fileInputRef.current) {
   };
 
   return (
-<div className="bg-white rounded-xl shadow-sm mb-6 overflow-hidden">
+    <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+      {/* Header and Chemical Selection */}
+      <div style={{ 
+        background: 'white',
+        borderRadius: '12px',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+        marginBottom: '24px',
+        overflow: 'hidden'
+      }}>
         {/* Header with gradient background */}
         <div style={{ 
           background: 'linear-gradient(to right, #1E40AF, #06B6D4)',
