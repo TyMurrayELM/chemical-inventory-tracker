@@ -10,7 +10,7 @@ const Login = ({ onLogin }) => {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'linear-gradient(to right, #4F46E5, #06B6D4)'
+      background: 'linear-gradient(to right,rgb(53, 45, 207), #06B6D4)'
     }}>
       <div style={{
         background: 'white',
