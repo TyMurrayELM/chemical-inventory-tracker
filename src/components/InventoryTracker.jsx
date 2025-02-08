@@ -354,83 +354,31 @@ if (fileInputRef.current) {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+    <div className="p-4 md:p-6 max-w-7xl mx-auto">
       {/* Header and Chemical Selection */}
-      <div style={{ 
-        background: 'white',
-        borderRadius: '12px',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-        marginBottom: '24px',
-        overflow: 'hidden'
-      }}>
-        {/* Header with gradient background */}
-        <div style={{ 
-          background: 'linear-gradient(to right, #1E40AF, #06B6D4)',
-          padding: '24px',
-          color: 'white'
-        }}>
-          <h1 style={{ 
-            fontSize: '24px', 
-            fontWeight: 'bold',
-            marginBottom: '4px'
-          }}>
+      <div className="bg-white rounded-xl shadow-sm mb-6 overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-800 to-cyan-500 p-4 md:p-6 text-white">
+          <h1 className="text-xl md:text-2xl font-bold mb-1">
             Chemical Inventory Tracker
           </h1>
-          <p style={{ 
-            fontSize: '14px', 
-            opacity: '0.9'
-          }}>
+          <p className="text-sm opacity-90">
             Monitor and manage chemical inventory across all locations
           </p>
         </div>
-
-{/* Chemical Selection Bar */}
-<div style={{ 
-          padding: '16px 24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          borderTop: '1px solid rgba(255,255,255,0.1)',
-          background: '#FAFAFA'
-        }}>
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '12px'
-          }}>
-            <div style={{ 
-              background: '#1E40AF',
-              width: '32px',
-              height: '32px',
-              borderRadius: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              fontSize: '20px',
-              fontWeight: '500'
-            }}>
+  
+        <div className="p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0 border-t border-gray-100 bg-gray-50">
+          {/* Chemical Selection */}
+          <div className="w-full md:w-auto flex items-center gap-3">
+            <div className="bg-blue-800 w-8 h-8 rounded-lg flex items-center justify-center text-white text-xl font-medium">
               +
             </div>
             <select
               value={selectedChemicals[0] || ''}
               onChange={(e) => setSelectedChemicals([e.target.value])}
-              style={{ 
-                width: '240px',
-                padding: '8px 12px',
-                borderRadius: '8px',
-                border: '1px solid #E5E7EB',
-                backgroundColor: 'white',
-                color: '#1F2937',
-                fontSize: '14px',
-                fontWeight: '500',
-                boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-                appearance: 'none',
+              className="w-full md:w-60 px-3 py-2 rounded-lg border border-gray-200 bg-white text-gray-800 text-sm font-medium shadow-sm appearance-none bg-[right_8px_center] bg-no-repeat"
+              style={{
                 backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E")`,
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right 8px center',
-                backgroundSize: '20px 20px',
-                paddingRight: '32px'
+                backgroundSize: '20px 20px'
               }}
             >
               <option value="">Select a Chemical</option>
@@ -439,85 +387,147 @@ if (fileInputRef.current) {
               ))}
             </select>
           </div>
-
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '24px' 
-          }}>
-           <div style={{ 
-  display: 'flex', 
-  alignItems: 'center', 
-  gap: '12px',
-  background: 'white',
-  padding: '8px 16px',
-  borderRadius: '24px',
-  boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
-}}>
-  <div style={{
-    width: '32px',
-    height: '32px',
-    borderRadius: '50%',
-    background: '#1E40AF',
-    color: 'white',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontWeight: '500',
-    fontSize: '16px'
-  }}>
-    {user.name.charAt(0)}
-  </div>
-  <div style={{
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '2px'
-  }}>
-    <p style={{
-      fontSize: '14px',
-      color: '#1F2937',
-      fontWeight: '500',
-      margin: 0
-    }}>
-      {user.name}
-    </p>
-    <p style={{
-      fontSize: '12px',
-      color: '#6B7280',
-      margin: 0
-    }}>
-      {user.email}
-    </p>
-  </div>
-</div>
+  
+          {/* User Info and Add Chemical Button */}
+          <div className="w-full md:w-auto flex flex-col md:flex-row items-stretch md:items-center gap-4">
+            <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-full shadow-sm w-full md:w-auto">
+              <div className="w-8 h-8 rounded-full bg-blue-800 text-white flex items-center justify-center font-medium text-base">
+                {user.name.charAt(0)}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-gray-800 truncate">{user.name}</p>
+                <p className="text-xs text-gray-500 truncate">{user.email}</p>
+              </div>
+            </div>
+            
             <button
               onClick={() => setShowAddChemical(true)}
-              style={{
-                padding: '8px 16px',
-                borderRadius: '8px',
-                background: '#1E40AF',
-                color: 'white',
-                border: 'none',
-                cursor: 'pointer',
-                fontWeight: '500',
-                fontSize: '14px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-                transition: 'all 0.2s'
-              }}
+              className="w-full md:w-auto px-4 py-2 rounded-lg bg-blue-800 text-white font-medium text-sm flex items-center justify-center gap-2 shadow-sm hover:bg-blue-900 transition-colors"
             >
-              <span style={{ 
-                fontSize: '20px', 
-                display: 'flex', 
-                alignItems: 'center' 
-              }}>+</span>
-              Add New Chemical
+              <span className="text-xl flex items-center">+</span>
+              <span>Add New Chemical</span>
             </button>
           </div>
         </div>
       </div>
+  
+      {showAddChemical && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-lg w-full max-w-lg overflow-hidden">
+            <div className="border-b border-gray-200 p-4 md:p-6">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Add New Chemical
+              </h2>
+              <p className="text-sm text-gray-600 mt-1">
+                Enter the details for the new chemical inventory item
+              </p>
+            </div>
+  
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              try {
+                const { data: newChemical, error: chemicalError } = await supabase
+                  .from('chemicals')
+                  .insert([{
+                    name: newChemicalName,
+                    unit: newChemicalUnit,
+                    min_level: parseFloat(newChemicalMinLevel)
+                  }])
+                  .select()
+                  .single();
+  
+                if (chemicalError) throw chemicalError;
+  
+                const inventoryLevels = ['PHX-N', 'PHX-SW', 'PHX-SE'].map(location => ({
+                  chemical_id: newChemical.id,
+                  location: location,
+                  current_amount: 0,
+                  in_transit_amount: 0
+                }));
+  
+                const { error: levelsError } = await supabase
+                  .from('inventory_levels')
+                  .insert(inventoryLevels);
+  
+                if (levelsError) throw levelsError;
+  
+                await fetchData();
+                
+                setShowAddChemical(false);
+                setNewChemicalName('');
+                setNewChemicalUnit('Oz');
+                setNewChemicalMinLevel('');
+  
+              } catch (error) {
+                console.error('Error adding chemical:', error);
+                alert('Failed to add chemical. Please try again.');
+              }
+            }} className="p-4 md:p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Chemical Name
+                </label>
+                <input
+                  type="text"
+                  value={newChemicalName}
+                  onChange={(e) => setNewChemicalName(e.target.value)}
+                  placeholder="Enter chemical name"
+                  required
+                  className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+  
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Unit Type
+                </label>
+                <select
+                  value={newChemicalUnit}
+                  onChange={(e) => setNewChemicalUnit(e.target.value)}
+                  className="w-32 px-3 py-2 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="Oz">Oz (Gal)</option>
+                </select>
+              </div>
+  
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Minimum Level (Gallons)
+                </label>
+                <input
+                  type="number"
+                  value={newChemicalMinLevel}
+                  onChange={(e) => setNewChemicalMinLevel(e.target.value)}
+                  placeholder="Enter gallons"
+                  required
+                  min="0"
+                  step="0.1"
+                  className="w-32 px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Alert will show when inventory drops below this level
+                </p>
+              </div>
+  
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                <button
+                  type="button"
+                  onClick={() => setShowAddChemical(false)}
+                  className="px-4 py-2 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors text-sm font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded-lg bg-emerald-500 text-white hover:bg-emerald-600 transition-colors text-sm font-medium"
+                >
+                  Add Chemical
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
 
 
