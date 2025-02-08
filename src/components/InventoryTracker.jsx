@@ -5,6 +5,7 @@ import nLogo from '../assets/icons/n.png';
 import swLogo from '../assets/icons/sw.png';
 import seLogo from '../assets/icons/se.png';
 import fullLogo from '../assets/logos/full.png';
+import agave from '../assets/logos/agave.png';  // Adjust the path based on your project structure
 
 
 const LOCATIONS = {
@@ -987,247 +988,247 @@ if (fileInputRef.current) {
 
 {/* Inventory Change Form */}
 <div style={{ 
-        background: '#f0f9ff', 
-        padding: '24px', 
-        borderRadius: '8px',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-      }}>
-        <h2 style={{ 
-          fontSize: '18px', 
-          fontWeight: '600', 
-          marginBottom: '20px',
-          color: '#1F2937'
+  background: '#f0f9ff', 
+  padding: '24px', 
+  borderRadius: '8px',
+  boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+  overflowX: 'auto',  // Added for mobile scrolling
+  minWidth: '320px'   // Added minimum width
+}}>
+  <h2 style={{ 
+    fontSize: '18px', 
+    fontWeight: '600', 
+    marginBottom: '20px',
+    color: '#1F2937'
+  }}>
+    Record Inventory Change
+  </h2>
+  <form onSubmit={handleInventoryChange}>
+    <div style={{ 
+      display: 'grid', 
+      gridTemplateColumns: '1fr 1fr', 
+      gap: '20px', 
+      marginBottom: '24px',
+      minWidth: '600px'  // Added minimum width for scrolling
+    }}>
+      {/* Chemical Selection */}
+      <div>
+        <label style={{ 
+          display: 'block', 
+          marginBottom: '8px',
+          fontWeight: '500',
+          color: '#374151'
         }}>
-          Record Inventory Change
-        </h2>
-        <form onSubmit={handleInventoryChange}>
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: '1fr 1fr', 
-            gap: '20px', 
-            marginBottom: '24px' 
-          }}>
-            {/* Chemical Selection */}
-            <div>
-              <label style={{ 
-                display: 'block', 
-                marginBottom: '8px',
-                fontWeight: '500',
-                color: '#374151'
-              }}>
-                Chemical
-              </label>
-              <select 
-                value={selectedChemical}
-                onChange={(e) => setSelectedChemical(e.target.value)}
-                style={{ 
-                  width: '100%', 
-                  padding: '10px 12px', 
-                  borderRadius: '6px', 
-                  border: '1px solid #D1D5DB',
-                  backgroundColor: 'white',
-                  color: '#1F2937',
-                  fontSize: '14px'
-                }}
-              >
-                <option value="">Select Chemical</option>
-                {inventory.map(item => (
-                  <option key={item.id} value={item.name}>{item.name}</option>
-                ))}
-              </select>
-            </div>
-            
-            {/* Location Selection */}
-            <div>
-              <label style={{ 
-                display: 'block', 
-                marginBottom: '8px',
-                fontWeight: '500',
-                color: '#374151'
-              }}>
-                Location
-              </label>
-              <select 
-                value={selectedLocation}
-                onChange={(e) => setSelectedLocation(e.target.value)}
-                style={{ 
-                  width: '100%', 
-                  padding: '10px 12px', 
-                  borderRadius: '6px', 
-                  border: '1px solid #D1D5DB',
-                  backgroundColor: 'white',
-                  color: '#1F2937',
-                  fontSize: '14px'
-                }}
-              >
-<optgroup label="Branch Locations">
-  {Object.entries(LOCATIONS).map(([key, location]) => (
-    <option key={key} value={key}>{location.name}</option>
-  ))}
-</optgroup>
-<optgroup label="Truck Inventory">
-  {Object.entries(LOCATIONS).map(([key, location]) => (
-    <option key={`${key}-truck`} value={`${key}-truck`}>{location.name} (Truck Inventory)</option>
-  ))}
-</optgroup>
-              </select>
-            </div>
+          Chemical
+        </label>
+        <select 
+          value={selectedChemical}
+          onChange={(e) => setSelectedChemical(e.target.value)}
+          style={{ 
+            width: '100%', 
+            padding: '10px 12px', 
+            borderRadius: '6px', 
+            border: '1px solid #D1D5DB',
+            backgroundColor: 'white',
+            color: '#1F2937',
+            fontSize: '14px'
+          }}
+        >
+          <option value="">Select Chemical</option>
+          {inventory.map(item => (
+            <option key={item.id} value={item.name}>{item.name}</option>
+          ))}
+        </select>
+      </div>
+      
+      {/* Location Selection */}
+      <div>
+        <label style={{ 
+          display: 'block', 
+          marginBottom: '8px',
+          fontWeight: '500',
+          color: '#374151'
+        }}>
+          Location
+        </label>
+        <select 
+          value={selectedLocation}
+          onChange={(e) => setSelectedLocation(e.target.value)}
+          style={{ 
+            width: '100%', 
+            padding: '10px 12px', 
+            borderRadius: '6px', 
+            border: '1px solid #D1D5DB',
+            backgroundColor: 'white',
+            color: '#1F2937',
+            fontSize: '14px'
+          }}
+        >
+          <optgroup label="Branch Locations">
+            {Object.entries(LOCATIONS).map(([key, location]) => (
+              <option key={key} value={key}>{location.name}</option>
+            ))}
+          </optgroup>
+          <optgroup label="Truck Inventory">
+            {Object.entries(LOCATIONS).map(([key, location]) => (
+              <option key={`${key}-truck`} value={`${key}-truck`}>{location.name} (Truck Inventory)</option>
+            ))}
+          </optgroup>
+        </select>
+      </div>
 
-            {/* Amount Input Group */}
-            <div>
-              <label style={{ 
-                display: 'block', 
-                marginBottom: '8px',
-                fontWeight: '500',
-                color: '#374151'
-              }}>
-                Amount
-              </label>
-              <div style={{ display: 'flex', gap: '8px' }}>
-  {inventoryType === 'audit' && (
-    <select
-      value={changeType}
-      onChange={(e) => setChangeType(e.target.value)}
-      style={{ 
-        padding: '10px 12px', 
-        borderRadius: '6px', 
-        border: '1px solid #D1D5DB',
-        backgroundColor: 'white',
-        color: '#1F2937',
+      {/* Amount Input Group */}
+      <div>
+        <label style={{ 
+          display: 'block', 
+          marginBottom: '8px',
+          fontWeight: '500',
+          color: '#374151'
+        }}>
+          Amount
+        </label>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          {inventoryType === 'audit' && (
+            <select
+              value={changeType}
+              onChange={(e) => setChangeType(e.target.value)}
+              style={{ 
+                padding: '10px 12px', 
+                borderRadius: '6px', 
+                border: '1px solid #D1D5DB',
+                backgroundColor: 'white',
+                color: '#1F2937',
+                fontSize: '14px',
+                width: '120px'
+              }}
+            >
+              <option value="add">Add</option>
+              <option value="remove">Remove</option>
+            </select>
+          )}
+          <input
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="Enter amount"
+            min="0"
+            style={{ 
+              flex: 1,
+              padding: '10px 12px', 
+              borderRadius: '6px', 
+              border: '1px solid #D1D5DB',
+              backgroundColor: 'white',
+              color: '#1F2937',
+              fontSize: '14px'
+            }}
+          />
+          <select 
+            value={unit}
+            onChange={(e) => setUnit(e.target.value)}
+            style={{ 
+              width: '80px',
+              padding: '10px 12px', 
+              borderRadius: '6px', 
+              border: '1px solid #D1D5DB',
+              backgroundColor: 'white',
+              color: '#1F2937',
+              fontSize: '14px'
+            }}
+          >
+            <option value="Oz">Oz</option>
+            <option value="Gal">Gal</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Change Type Selection */}
+      <div>
+        <label style={{ 
+          display: 'block', 
+          marginBottom: '8px',
+          fontWeight: '500',
+          color: '#374151'
+        }}>
+          Type
+        </label>
+        <select 
+          value={inventoryType}
+          onChange={(e) => setInventoryType(e.target.value)}
+          style={{ 
+            width: '100%', 
+            padding: '10px 12px', 
+            borderRadius: '6px', 
+            border: '1px solid #D1D5DB',
+            backgroundColor: 'white',
+            color: '#1F2937',
+            fontSize: '14px'
+          }}
+        >
+          <option value="withdrawn">Withdrawn</option>
+          <option value="truckInventory">Added to Truck Inventory</option>
+          <option value="audit">Inventory Audit</option>
+          <option value="newInventory">New Inventory</option>
+        </select>
+      </div>
+    </div>
+
+    {/* File Attachment */}
+    <div style={{ 
+      marginBottom: '24px',
+      padding: '16px',
+      background: '#F9FAFB',
+      borderRadius: '6px',
+      border: '1px dashed #D1D5DB'
+    }}>
+      <label style={{ 
+        display: 'block', 
+        marginBottom: '8px',
+        fontWeight: '500',
+        color: '#374151'
+      }}>
+        Attach Receipt or Documentation
+      </label>
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={(e) => setAttachedFile(e.target.files[0])}
+        style={{
+          width: '100%',
+          padding: '8px',
+          color: '#4B5563',
+          fontSize: '14px'
+        }}
+      />
+      <p style={{ 
+        fontSize: '12px', 
+        color: '#6B7280',
+        marginTop: '4px'
+      }}>
+        Optional: Attach relevant documentation (receipts, invoices, etc.)
+      </p>
+    </div>
+
+    {/* Submit Button */}
+    <button 
+      type="submit"
+      disabled={!selectedChemical || !amount || !selectedLocation || !inventoryType}
+      style={{
+        background: '#1E40AF',
+        color: 'white',
+        padding: '10px 20px',
+        borderRadius: '6px',
+        border: 'none',
+        cursor: (!selectedChemical || !amount || !selectedLocation || !inventoryType) ? 'not-allowed' : 'pointer',
+        fontWeight: '500',
         fontSize: '14px',
-        width: '120px'
+        transition: 'background-color 0.2s',
+        opacity: (!selectedChemical || !amount || !selectedLocation || !inventoryType) ? 0.5 : 1
       }}
     >
-      <option value="add">Add</option>
-      <option value="remove">Remove</option>
-    </select>
-  )}
-  <input
-    type="number"
-    value={amount}
-    onChange={(e) => setAmount(e.target.value)}
-    placeholder="Enter amount"
-    min="0"
-    style={{ 
-      flex: 1,
-      padding: '10px 12px', 
-      borderRadius: '6px', 
-      border: '1px solid #D1D5DB',
-      backgroundColor: 'white',
-      color: '#1F2937',
-      fontSize: '14px'
-    }}
-  />
-                <select 
-                  value={unit}
-                  onChange={(e) => setUnit(e.target.value)}
-                  style={{ 
-                    width: '80px',
-                    padding: '10px 12px', 
-                    borderRadius: '6px', 
-                    border: '1px solid #D1D5DB',
-                    backgroundColor: 'white',
-                    color: '#1F2937',
-                    fontSize: '14px'
-                  }}
-                >
-                  <option value="Oz">Oz</option>
-                  <option value="Gal">Gal</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Change Type Selection */}
-            <div>
-              <label style={{ 
-                display: 'block', 
-                marginBottom: '8px',
-                fontWeight: '500',
-                color: '#374151'
-              }}>
-                Type
-              </label>
-              <select 
-                value={inventoryType}
-                onChange={(e) => setInventoryType(e.target.value)}
-                style={{ 
-                  width: '100%', 
-                  padding: '10px 12px', 
-                  borderRadius: '6px', 
-                  border: '1px solid #D1D5DB',
-                  backgroundColor: 'white',
-                  color: '#1F2937',
-                  fontSize: '14px'
-                }}
-              >
-                <option value="withdrawn">Withdrawn</option>
-                <option value="truckInventory">Added to Truck Inventory</option>
-                <option value="audit">Inventory Audit</option>
-                <option value="newInventory">New Inventory</option>
-              </select>
-            </div>
-          </div>
-
-
-
-          {/* File Attachment */}
-          <div style={{ 
-            marginBottom: '24px',
-            padding: '16px',
-            background: '#F9FAFB',
-            borderRadius: '6px',
-            border: '1px dashed #D1D5DB'
-          }}>
-            <label style={{ 
-              display: 'block', 
-              marginBottom: '8px',
-              fontWeight: '500',
-              color: '#374151'
-            }}>
-              Attach Receipt or Documentation
-            </label>
-            <input
-  type="file"
-  ref={fileInputRef}
-  onChange={(e) => setAttachedFile(e.target.files[0])}
-  style={{
-    width: '100%',
-    padding: '8px',
-    color: '#4B5563',
-    fontSize: '14px'
-  }}
-/>
-            <p style={{ 
-              fontSize: '12px', 
-              color: '#6B7280',
-              marginTop: '4px'
-            }}>
-              Optional: Attach relevant documentation (receipts, invoices, etc.)
-            </p>
-          </div>
-
-
-          {/* Submit Button */}
-          <button 
-  type="submit"
-  disabled={!selectedChemical || !amount || !selectedLocation || !inventoryType}
-  style={{
-    background: '#1E40AF',
-    color: 'white',
-    padding: '10px 20px',
-    borderRadius: '6px',
-    border: 'none',
-    cursor: (!selectedChemical || !amount || !selectedLocation || !inventoryType) ? 'not-allowed' : 'pointer',
-    fontWeight: '500',
-    fontSize: '14px',
-    transition: 'background-color 0.2s',
-    opacity: (!selectedChemical || !amount || !selectedLocation || !inventoryType) ? 0.5 : 1
-  }}
->
-  Submit Change
-</button>
-        </form>
-      </div>
+      Submit Change
+    </button>
+  </form>
+</div>
 
 {/* Change History */}
 <div style={{ 
