@@ -264,35 +264,47 @@ let updates = {};
 let changeHistoryType = inventoryType; // Store the type separately for history
 
 if (isTruckLocation) {
-  // For truck inventory locations, only modify in_transit_amount (DB field name)
+  // For truck inventory locations
+  if (inventoryType === 'withdrawn') {
+    // If product is used from truck inventory, reduce in_transit_amount
+    const newTruckInventory = currentLevel.in_transit_amount + convertedAmount; // convertedAmount is already negative
+    if (newTruckInventory < 0) {
+      throw new Error('Cannot reduce truck inventory below 0');
+    }
+    updates = {
+      in_transit_amount: newTruckInventory
+    };
+  } else {
+    // For other operations on truck inventory
     const newTruckInventory = currentLevel.in_transit_amount + convertedAmount;
     if (newTruckInventory < 0) {
       throw new Error('Cannot reduce truck inventory below 0');
     }
     updates = {
-      in_transit_amount: newTruckInventory  // DB field name
+      in_transit_amount: newTruckInventory
     };
+  }
 } else {
-    // For branch locations inventory
-    if (inventoryType === 'truckInventory') {
-      const newInventory = currentLevel.current_amount - Math.abs(convertedAmount);
-      const newTruckInventory = currentLevel.in_transit_amount + Math.abs(convertedAmount);
-      if (newInventory < 0) {
-        throw new Error('Cannot reduce inventory below 0');
-      }
-      updates = {
-        current_amount: newInventory,        // DB field name
-        in_transit_amount: newTruckInventory // DB field name
-      };
-    } else {
-      const newInventory = currentLevel.current_amount + convertedAmount;
-      if (newInventory < 0) {  // Fixed: using newInventory instead of newAmount
-        throw new Error('Cannot reduce inventory below 0');
-      }
-      updates = {
-        current_amount: newInventory // Fixed: using newInventory instead of newAmount
-      };
+  // For branch locations inventory
+  if (inventoryType === 'truckInventory') {
+    const newInventory = currentLevel.current_amount - Math.abs(convertedAmount);
+    const newTruckInventory = currentLevel.in_transit_amount + Math.abs(convertedAmount);
+    if (newInventory < 0) {
+      throw new Error('Cannot reduce inventory below 0');
     }
+    updates = {
+      current_amount: newInventory,
+      in_transit_amount: newTruckInventory
+    };
+  } else {
+    const newInventory = currentLevel.current_amount + convertedAmount;
+    if (newInventory < 0) {
+      throw new Error('Cannot reduce inventory below 0');
+    }
+    updates = {
+      current_amount: newInventory
+    };
+  }
 }
   
       // Update the inventory levels
