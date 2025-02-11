@@ -234,6 +234,7 @@ const handleInventoryChange = async (e) => {
     const chemical = inventory.find(item => item.name === selectedChemical);
     if (!chemical) return;
 
+    console.log('Selected Chemical:', chemical); // Add this debug line
     // Convert amount based on inventory type
     let convertedAmount = parseFloat(amount);
     if (unit === 'Gal') {
@@ -289,18 +290,32 @@ const handleInventoryChange = async (e) => {
       // For branch locations inventory
       if (inventoryType === 'truckInventory') {
         // When transferring to truck inventory, reduce branch inventory and increase truck inventory
-        const amountToTransfer = Math.abs(convertedAmount);
-        const newBranchInventory = currentLevel.current_amount - amountToTransfer;
-        const newTruckInventory = currentLevel.in_transit_amount + amountToTransfer;
-        
-        if (newBranchInventory < 0) {
-          throw new Error('Cannot reduce branch inventory below 0');
-        }
-      
-        updates = {
-          current_amount: newBranchInventory,
-          in_transit_amount: newTruckInventory
-        };
+// When transferring to truck inventory, reduce branch inventory and increase truck inventory
+const amountToTransfer = Math.abs(convertedAmount);
+const newBranchInventory = currentLevel.current_amount - amountToTransfer;
+const newTruckInventory = currentLevel.in_transit_amount + amountToTransfer;
+
+if (newBranchInventory < 0) {
+  throw new Error('Cannot reduce branch inventory below 0');
+}
+
+// First update - reduce branch inventory
+const { error: branchError } = await supabase
+  .from('inventory_levels')
+  .update({ current_amount: newBranchInventory })
+  .eq('chemical_id', chemical.id)
+  .eq('location', baseLocation);
+
+if (branchError) throw branchError;
+
+// Second update - increase truck inventory
+const { error: truckError } = await supabase
+  .from('inventory_levels')
+  .update({ in_transit_amount: newTruckInventory })
+  .eq('chemical_id', chemical.id)
+  .eq('location', baseLocation);
+
+if (truckError) throw truckError;
       } else {
         const newInventory = currentLevel.current_amount + convertedAmount;
         if (newInventory < 0) {
