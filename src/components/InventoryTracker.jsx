@@ -224,212 +224,153 @@ const InventoryTracker = ({ user }) => {
     fetchData();
   }, []);
 
-  const handleInventoryChange = async (e) => {
-    e.preventDefault();
-    
-    if (!selectedChemical || !amount) return;
+// Replace the existing handleInventoryChange function with this corrected version
+const handleInventoryChange = async (e) => {
+  e.preventDefault();
   
-    try {
-      const chemical = inventory.find(item => item.name === selectedChemical);
-      if (!chemical) return;
-  
-      // Convert amount based on inventory type
-      let convertedAmount = parseFloat(amount);
-      if (unit === 'Gal') {
-        convertedAmount = convertedAmount * 128; // Convert gallons to ounces
-      }
-  
-      // Apply negative amounts for withdrawals and removals
-      if (inventoryType === 'withdrawn') {
-        convertedAmount *= -1;
-      } else if (inventoryType === 'audit' && changeType === 'remove') {
-        convertedAmount *= -1;
-      }
-  
-// First, determine if we're dealing with a truck inventory location
-const isTruckLocation = selectedLocation.includes('truck');
-const baseLocation = isTruckLocation ? selectedLocation.split('-truck')[0] : selectedLocation;
+  if (!selectedChemical || !amount) return;
 
-// Get current inventory levels
-const { data: currentLevel, error: fetchError } = await supabase
-  .from('inventory_levels')
-  .select('*')
-  .eq('chemical_id', chemical.id)
-  .eq('location', baseLocation)
-  .single();
+  try {
+    const chemical = inventory.find(item => item.name === selectedChemical);
+    if (!chemical) return;
 
-if (fetchError) throw fetchError;
-
-let updates = {};
-let changeHistoryType = inventoryType; // Store the type separately for history
-
-if (isTruckLocation) {
-  console.log('----TRANSACTION DEBUG----');
-  console.log({
-    action: inventoryType,
-    isTruckLocation,
-    selectedLocation,
-    baseLocation,
-    amount: convertedAmount,
-    currentInventory: currentLevel.current_amount,
-    currentTruckInventory: currentLevel.in_transit_amount,
-    proposedUpdates: updates
-  });
-  console.log('----------------------');
-  // For truck inventory locations
-  if (inventoryType === 'withdrawn') {
-    // If product is used from truck inventory, reduce in_transit_amount
-    const newTruckInventory = currentLevel.in_transit_amount + convertedAmount; // convertedAmount is already negative
-    if (newTruckInventory < 0) {
-      throw new Error('Cannot reduce truck inventory below 0');
+    // Convert amount based on inventory type
+    let convertedAmount = parseFloat(amount);
+    if (unit === 'Gal') {
+      convertedAmount = convertedAmount * 128; // Convert gallons to ounces
     }
-    updates = {
-      in_transit_amount: newTruckInventory
-    };
-  } else {
-    // For other operations on truck inventory
-    const newTruckInventory = currentLevel.in_transit_amount + convertedAmount;
-    if (newTruckInventory < 0) {
-      throw new Error('Cannot reduce truck inventory below 0');
+
+    // Apply negative amounts for withdrawals and removals
+    if (inventoryType === 'withdrawn') {
+      convertedAmount *= -1;
+    } else if (inventoryType === 'audit' && changeType === 'remove') {
+      convertedAmount *= -1;
     }
-    updates = {
-      in_transit_amount: newTruckInventory
-    };
-  }
-} else {
-  // For branch locations inventory
-  if (inventoryType === 'truckInventory') {
-    // When transferring to truck inventory, reduce branch inventory and increase truck inventory
-    const amountToTransfer = Math.abs(convertedAmount);
-    const newBranchInventory = currentLevel.current_amount - amountToTransfer;
-    const newTruckInventory = currentLevel.in_transit_amount + amountToTransfer;
-    
-    if (newBranchInventory < 0) {
-      throw new Error('Cannot reduce branch inventory below 0');
-    }
-  
-    // Update both current_amount (branch) and in_transit_amount (truck)
-    updates = {
-      current_amount: newBranchInventory,
-      in_transit_amount: newTruckInventory
-    };
-  
-    // Make sure we're updating the correct record in the database
-    await supabase
+
+    // First, determine if we're dealing with a truck inventory location
+    const isTruckLocation = selectedLocation.includes('truck');
+    const baseLocation = isTruckLocation ? selectedLocation.split('-truck')[0] : selectedLocation;
+
+    // Get current inventory levels
+    const { data: currentLevel, error: fetchError } = await supabase
       .from('inventory_levels')
-      .update(updates)
+      .select('*')
       .eq('chemical_id', chemical.id)
-      .eq('location', baseLocation);
-  } else {
-    const newInventory = currentLevel.current_amount + convertedAmount;
-    if (newInventory < 0) {
-      throw new Error('Cannot reduce inventory below 0');
-    }
-    updates = {
-      current_amount: newInventory
-    };
-  }
-}
-  
-      // Update the inventory levels
-      const { error: updateError } = await supabase
-        .from('inventory_levels')
-        .update(updates)
-        .eq('chemical_id', chemical.id)
-        .eq('location', baseLocation);
-  
-      if (updateError) throw updateError;
-  
-      // Handle file upload if there's an attachment
-      let attachmentUrl = null;
-      if (attachedFile) {
-        console.log('Attempting to upload file:', attachedFile);
-        const timestamp = Date.now();
-        attachmentUrl = await uploadFile(attachedFile, timestamp);
-        console.log('Upload successful, URL:', attachmentUrl);
-        
-        if (!attachmentUrl) {
-          throw new Error('Failed to get URL for uploaded file');
+      .eq('location', baseLocation)
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    let updates = {};
+    let changeHistoryType = inventoryType;
+
+    if (isTruckLocation) {
+      // For truck inventory locations
+      if (inventoryType === 'withdrawn') {
+        // If product is used from truck inventory, reduce in_transit_amount
+        const newTruckInventory = currentLevel.in_transit_amount + convertedAmount; // convertedAmount is already negative
+        if (newTruckInventory < 0) {
+          throw new Error('Cannot reduce truck inventory below 0');
         }
+        updates = {
+          in_transit_amount: newTruckInventory
+        };
+      } else {
+        // For other operations on truck inventory
+        const newTruckInventory = currentLevel.in_transit_amount + convertedAmount;
+        if (newTruckInventory < 0) {
+          throw new Error('Cannot reduce truck inventory below 0');
+        }
+        updates = {
+          in_transit_amount: newTruckInventory
+        };
       }
-  
-// Record in change history
-if (inventoryType === 'truckInventory') {
-  // First record - reduction from branch inventory
-  const { error: historyError1 } = await supabase
-    .from('change_history')
-    .insert([{
-      chemical_id: chemical.id,
-      location: baseLocation,  // Branch location
-      amount: -Math.abs(convertedAmount),  // Negative amount for reduction
-      type: changeHistoryType,
-      user_email: user.email,
-      user_name: user.name,
-      attachment_url: attachmentUrl,
-      created_at: new Date().toISOString()
-    }]);
+    } else {
+      // For branch locations inventory
+      if (inventoryType === 'truckInventory') {
 
-  if (historyError1) {
-    console.error('History insert error 1:', historyError1);
-    throw historyError1;
-  }
 
-  // Second record - increase in truck inventory
-  const { error: historyError2 } = await supabase
-    .from('change_history')
-    .insert([{
-      chemical_id: chemical.id,
-      location: `${baseLocation}-truck`,  // Truck location
-      amount: Math.abs(convertedAmount),  // Positive amount for increase
-      type: changeHistoryType,
-      user_email: user.email,
-      user_name: user.name,
-      attachment_url: attachmentUrl,
-      created_at: new Date().toISOString()
-    }]);
-
-  if (historyError2) {
-    console.error('History insert error 2:', historyError2);
-    throw historyError2;
-  }
-} else {
-  // Regular history record for other types
-  const { error: historyError } = await supabase
-    .from('change_history')
-    .insert([{
-      chemical_id: chemical.id,
-      location: selectedLocation,
-      amount: convertedAmount,
-      type: changeHistoryType,
-      user_email: user.email,
-      user_name: user.name,
-      attachment_url: attachmentUrl,
-      created_at: new Date().toISOString()
-    }]);
-
-  if (historyError) {
-    console.error('History insert error:', historyError);
-    throw historyError;
-  }
-}
-  
-      // Refresh data
-      await fetchData();
-  
-// Reset form
-setSelectedChemical('');
-setAmount('');
-setUnit('Oz');
-setAttachedFile(null);
-if (fileInputRef.current) {
-  fileInputRef.current.value = '';
-}
-  
-    } catch (error) {
-      console.error('Error updating inventory:', error);
-      alert('Failed to update inventory. Please try again.');
+    // Handle file upload if there's an attachment
+    let attachmentUrl = null;
+    if (attachedFile) {
+      console.log('Attempting to upload file:', attachedFile);
+      const timestamp = Date.now();
+      attachmentUrl = await uploadFile(attachedFile, timestamp);
+      console.log('Upload successful, URL:', attachmentUrl);
+      
+      if (!attachmentUrl) {
+        throw new Error('Failed to get URL for uploaded file');
+      }
     }
-  };
+
+    // Record in change history
+    if (inventoryType === 'truckInventory') {
+      // First record - reduction from branch inventory
+      const { error: historyError1 } = await supabase
+        .from('change_history')
+        .insert([{
+          chemical_id: chemical.id,
+          location: baseLocation,  // Branch location
+          amount: -Math.abs(convertedAmount),  // Negative amount for reduction
+          type: changeHistoryType,
+          user_email: user.email,
+          user_name: user.name,
+          attachment_url: attachmentUrl,
+          created_at: new Date().toISOString()
+        }]);
+
+      if (historyError1) throw historyError1;
+
+      // Second record - increase in truck inventory
+      const { error: historyError2 } = await supabase
+        .from('change_history')
+        .insert([{
+          chemical_id: chemical.id,
+          location: `${baseLocation}-truck`,  // Truck location
+          amount: Math.abs(convertedAmount),  // Positive amount for increase
+          type: changeHistoryType,
+          user_email: user.email,
+          user_name: user.name,
+          attachment_url: attachmentUrl,
+          created_at: new Date().toISOString()
+        }]);
+
+      if (historyError2) throw historyError2;
+    } else {
+      // Regular history record for other types
+      const { error: historyError } = await supabase
+        .from('change_history')
+        .insert([{
+          chemical_id: chemical.id,
+          location: selectedLocation,
+          amount: convertedAmount,
+          type: changeHistoryType,
+          user_email: user.email,
+          user_name: user.name,
+          attachment_url: attachmentUrl,
+          created_at: new Date().toISOString()
+        }]);
+
+      if (historyError) throw historyError;
+    }
+
+    // Refresh data
+    await fetchData();
+
+    // Reset form
+    setSelectedChemical('');
+    setAmount('');
+    setUnit('Oz');
+    setAttachedFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+
+  } catch (error) {
+    console.error('Error updating inventory:', error);
+    alert('Failed to update inventory. Please try again.');
+  }
+};
 
   return (
     <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
