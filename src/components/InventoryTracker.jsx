@@ -299,15 +299,27 @@ if (isTruckLocation) {
 } else {
   // For branch locations inventory
   if (inventoryType === 'truckInventory') {
-    const newInventory = currentLevel.current_amount - Math.abs(convertedAmount);
-    const newTruckInventory = currentLevel.in_transit_amount + Math.abs(convertedAmount);
-    if (newInventory < 0) {
-      throw new Error('Cannot reduce inventory below 0');
+    // When transferring to truck inventory, reduce branch inventory and increase truck inventory
+    const amountToTransfer = Math.abs(convertedAmount);
+    const newBranchInventory = currentLevel.current_amount - amountToTransfer;
+    const newTruckInventory = currentLevel.in_transit_amount + amountToTransfer;
+    
+    if (newBranchInventory < 0) {
+      throw new Error('Cannot reduce branch inventory below 0');
     }
+  
+    // Update both current_amount (branch) and in_transit_amount (truck)
     updates = {
-      current_amount: newInventory,
+      current_amount: newBranchInventory,
       in_transit_amount: newTruckInventory
     };
+  
+    // Make sure we're updating the correct record in the database
+    await supabase
+      .from('inventory_levels')
+      .update(updates)
+      .eq('chemical_id', chemical.id)
+      .eq('location', baseLocation);
   } else {
     const newInventory = currentLevel.current_amount + convertedAmount;
     if (newInventory < 0) {
