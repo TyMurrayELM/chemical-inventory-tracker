@@ -264,9 +264,18 @@ let updates = {};
 let changeHistoryType = inventoryType; // Store the type separately for history
 
 if (isTruckLocation) {
-  console.log('Truck Location Selected:', selectedLocation);
-  console.log('Current Truck Inventory:', currentLevel.in_transit_amount);
-  console.log('Amount to Change:', convertedAmount);
+  console.log('----TRANSACTION DEBUG----');
+  console.log({
+    action: inventoryType,
+    isTruckLocation,
+    selectedLocation,
+    baseLocation,
+    amount: convertedAmount,
+    currentInventory: currentLevel.current_amount,
+    currentTruckInventory: currentLevel.in_transit_amount,
+    proposedUpdates: updates
+  });
+  console.log('----------------------');
   // For truck inventory locations
   if (inventoryType === 'withdrawn') {
     // If product is used from truck inventory, reduce in_transit_amount
