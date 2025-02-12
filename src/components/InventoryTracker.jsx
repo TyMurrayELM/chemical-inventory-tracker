@@ -59,6 +59,10 @@ const InventoryTracker = ({ user }) => {
   const [historyLocationFilter, setHistoryLocationFilter] = useState('all');
   const [attachedFile, setAttachedFile] = useState(null);
   const fileInputRef = useRef(null);
+  const [notes, setNotes] = useState('');
+  const [isEditingNote, setIsEditingNote] = useState(false);
+  const [editingChangeId, setEditingChangeId] = useState(null);
+  const [editedNote, setEditedNote] = useState('');
   const handleFileUpload = async (changeId, file) => {
     try {
       const fileUrl = await uploadFile(file, changeId);
@@ -178,7 +182,8 @@ const InventoryTracker = ({ user }) => {
           user: change.user_name,
           date: new Date(change.created_at).toLocaleDateString(),
           time: new Date(change.created_at).toLocaleTimeString(),
-          attachment_url: change.attachment_url
+          attachment_url: change.attachment_url,
+          notes: change.notes  // Add this line
         };
       });
       
@@ -371,17 +376,18 @@ if (inventoryType === 'truckInventory') {
 } else {
   // Regular history record for other types
   const { error: historyError } = await supabase
-    .from('change_history')
-    .insert([{
-      chemical_id: chemical.id,
-      location: selectedLocation,
-      amount: convertedAmount,
-      type: changeHistoryType,
-      user_email: user.email,
-      user_name: user.name,
-      attachment_url: attachmentUrl,
-      created_at: new Date().toISOString()
-    }]);
+  .from('change_history')
+  .insert([{
+    chemical_id: chemical.id,
+    location: selectedLocation,
+    amount: convertedAmount,
+    type: changeHistoryType,
+    user_email: user.email,
+    user_name: user.name,
+    attachment_url: attachmentUrl,
+    notes: notes,  // Add this line
+    created_at: new Date().toISOString()
+  }]);
 
   if (historyError) {
     console.error('History insert error:', historyError);
@@ -1198,6 +1204,37 @@ if (fileInputRef.current) {
       </div>
     </div>
 
+{/* Notes Field */}
+<div style={{ 
+  marginBottom: '24px'
+}}>
+  <label style={{ 
+    display: 'block', 
+    marginBottom: '8px',
+    fontWeight: '500',
+    color: '#374151'
+  }}>
+    Notes
+  </label>
+  <textarea
+    value={notes}
+    onChange={(e) => setNotes(e.target.value)}
+    placeholder="Add any additional notes or comments"
+    style={{
+      width: '100%',
+      padding: '10px 12px',
+      borderRadius: '6px',
+      border: '1px solid #D1D5DB',
+      backgroundColor: 'white',
+      color: '#1F2937',
+      fontSize: '14px',
+      minHeight: '80px',
+      resize: 'vertical'
+    }}
+  />
+</div>
+
+
     {/* File Attachment */}
     <div style={{ 
       marginBottom: '24px',
@@ -1365,6 +1402,16 @@ if (fileInputRef.current) {
             color: '#4B5563',
             fontWeight: '600'
           }}>User</th>
+
+          {/* Add the new Notes column here */}
+          <th style={{ 
+            textAlign: 'left', 
+            padding: '12px 16px', 
+            borderBottom: '1px solid #E5E7EB',
+            color: '#4B5563',
+            fontWeight: '600'
+          }}>Notes</th>
+
           <th style={{ 
             textAlign: 'left', 
             padding: '12px 16px', 
@@ -1452,10 +1499,18 @@ const runningTotal = changeHistory
                      change.type}
               </td>
               <td style={{ 
-                padding: '16px', 
-                borderBottom: '1px solid #E5E7EB',
-                color: '#6B7280'
-              }}>{change.user}</td>
+  padding: '16px', 
+  borderBottom: '1px solid #E5E7EB',
+  color: '#6B7280'
+}}>{change.user}</td>
+
+{/* Add this Notes cell here */}
+<td style={{ 
+  padding: '16px', 
+  borderBottom: '1px solid #E5E7EB',
+  color: '#6B7280'
+}}>{change.notes || '-'}</td>
+
 <td style={{ 
   padding: '16px', 
   borderBottom: '1px solid #E5E7EB'
