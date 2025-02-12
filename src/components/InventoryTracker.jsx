@@ -183,26 +183,38 @@ const InventoryTracker = ({ user }) => {
       });
       
       // Combine the chemical data
-      const combinedData = chemicalsData.map(chemical => ({
-        id: chemical.id,
-        name: chemical.name,
-        unit: chemical.unit,
-        minLevel: chemical.min_level,
-        inventory: {
-          'PHX-N': { 
-            current: levelsData.find(l => l.chemical_id === chemical.id && l.location === 'PHX-N')?.current_amount || 0,
-            truckInventory: levelsData.find(l => l.chemical_id === chemical.id && l.location === 'PHX-N')?.in_transit_amount || 0
-          },
-          'PHX-SW': {
-            current: levelsData.find(l => l.chemical_id === chemical.id && l.location === 'PHX-SW')?.current_amount || 0,
-            truckInventory: levelsData.find(l => l.chemical_id === chemical.id && l.location === 'PHX-SW')?.in_transit_amount || 0
-          },
-          'PHX-SE': {
-            current: levelsData.find(l => l.chemical_id === chemical.id && l.location === 'PHX-SE')?.current_amount || 0,
-            truckInventory: levelsData.find(l => l.chemical_id === chemical.id && l.location === 'PHX-SE')?.in_transit_amount || 0
+      const combinedData = chemicalsData.map(chemical => {
+        // Calculate running totals for each location and truck
+        const getRunningTotal = (location) => {
+          return historyData
+            .filter(h => 
+              h.chemical_id === chemical.id && 
+              h.location === location
+            )
+            .reduce((total, h) => total + h.amount, 0);
+        };
+      
+        return {
+          id: chemical.id,
+          name: chemical.name,
+          unit: chemical.unit,
+          minLevel: chemical.min_level,
+          inventory: {
+            'PHX-N': { 
+              current: getRunningTotal('PHX-N'),
+              truckInventory: getRunningTotal('PHX-N-truck')
+            },
+            'PHX-SW': {
+              current: getRunningTotal('PHX-SW'),
+              truckInventory: getRunningTotal('PHX-SW-truck')
+            },
+            'PHX-SE': {
+              current: getRunningTotal('PHX-SE'),
+              truckInventory: getRunningTotal('PHX-SE-truck')
+            }
           }
-        }
-      }));
+        };
+      });
   
       // Set all state updates at once
       setIsLoading(false);
@@ -995,7 +1007,7 @@ if (fileInputRef.current) {
                         }}
                       >
 <div style={{ fontWeight: '500' }}>
-  Inventory: {formatInventoryDisplay(item.inventory[locationKey].current)}
+  Branch Inventory: {formatInventoryDisplay(item.inventory[locationKey].current)}
 </div>
 <div style={{ 
   fontSize: '0.9em', 
