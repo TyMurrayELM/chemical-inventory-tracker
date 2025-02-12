@@ -1206,7 +1206,8 @@ if (fileInputRef.current) {
 
 {/* Notes Field */}
 <div style={{ 
-  marginBottom: '24px'
+  marginBottom: '24px',
+  width: '50%'  // Make it take up only half the width
 }}>
   <label style={{ 
     display: 'block', 
@@ -1228,7 +1229,8 @@ if (fileInputRef.current) {
       backgroundColor: 'white',
       color: '#1F2937',
       fontSize: '14px',
-      minHeight: '80px',
+      minHeight: '60px',  // Reduced height
+      maxHeight: '100px', // Added max height
       resize: 'vertical'
     }}
   />
