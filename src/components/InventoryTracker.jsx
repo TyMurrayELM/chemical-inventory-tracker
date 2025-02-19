@@ -7,6 +7,7 @@ import seLogo from '../assets/icons/se.png';
 import fullLogo from '../assets/logos/full.png';
 import agave from '../assets/logos/agave.png';  // Adjust the path based on your project structure
 import CustomLocationSelect from './CustomLocationSelect';
+import { ChevronDown } from 'lucide-react';
 
 
 const LOCATIONS = {
@@ -60,6 +61,7 @@ const InventoryTracker = ({ user }) => {
   const [attachedFile, setAttachedFile] = useState(null);
   const fileInputRef = useRef(null);
   const [notes, setNotes] = useState('');
+  const [isChangeFormOpen, setIsChangeFormOpen] = useState(true);
   const [isEditingNote, setIsEditingNote] = useState(false);
   const [editingChangeId, setEditingChangeId] = useState(null);
   const [editedNote, setEditedNote] = useState('');
@@ -1051,18 +1053,40 @@ if (fileInputRef.current) {
   padding: '24px', 
   borderRadius: '8px',
   boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-  overflowX: 'auto',  // Added for mobile scrolling
-  minWidth: '320px'   // Added minimum width
+  overflowX: 'auto',
+  minWidth: '320px'
 }}>
-  <h2 style={{ 
-    fontSize: '18px', 
-    fontWeight: '600', 
-    marginBottom: '20px',
-    color: '#1F2937'
-  }}>
-    Record Inventory Change
-  </h2>
-  <form onSubmit={handleInventoryChange}>
+  <div 
+    onClick={() => setIsChangeFormOpen(!isChangeFormOpen)}
+    style={{ 
+      display: 'flex', 
+      justifyContent: 'space-between', 
+      alignItems: 'center',
+      cursor: 'pointer',
+      marginBottom: isChangeFormOpen ? '20px' : '0'
+    }}
+  >
+    <h2 style={{ 
+      fontSize: '18px', 
+      fontWeight: '600',
+      color: '#1F2937',
+      margin: 0
+    }}>
+      Record Inventory Change
+    </h2>
+    <ChevronDown 
+      size={24} 
+      style={{ 
+        transform: isChangeFormOpen ? 'rotate(180deg)' : 'rotate(0)',
+        transition: 'transform 0.3s ease',
+        color: '#4B5563'
+      }}
+    />
+  </div>
+
+  {isChangeFormOpen && (
+    <form onSubmit={handleInventoryChange}>
+
     <div style={{ 
       display: 'grid', 
       gridTemplateColumns: '1fr 1fr', 
@@ -1292,7 +1316,8 @@ if (fileInputRef.current) {
     >
       Submit Change
     </button>
-  </form>
+    </form>
+  )}
 </div>
 
 {/* Change History */}
