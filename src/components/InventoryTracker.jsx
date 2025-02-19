@@ -1054,7 +1054,8 @@ if (fileInputRef.current) {
   borderRadius: '8px',
   boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
   overflowX: 'auto',
-  minWidth: '320px'
+  minWidth: '320px',
+  marginBottom: '24px'  // Add this line
 }}>
   <div 
     onClick={() => setIsChangeFormOpen(!isChangeFormOpen)}
