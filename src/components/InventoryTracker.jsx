@@ -1106,23 +1106,25 @@ if (fileInputRef.current) {
           Chemical
         </label>
         <select 
-          value={selectedChemical}
-          onChange={(e) => setSelectedChemical(e.target.value)}
-          style={{ 
-            width: '100%', 
-            padding: '10px 12px', 
-            borderRadius: '6px', 
-            border: '1px solid #D1D5DB',
-            backgroundColor: 'white',
-            color: '#1F2937',
-            fontSize: '14px'
-          }}
-        >
-          <option value="">Select Chemical</option>
-          {inventory.map(item => (
-            <option key={item.id} value={item.name}>{item.name}</option>
-          ))}
-        </select>
+  value={selectedChemical}
+  onChange={(e) => setSelectedChemical(e.target.value)}
+  style={{ 
+    width: '100%', 
+    padding: '10px 12px', 
+    borderRadius: '6px', 
+    border: '1px solid #D1D5DB',
+    backgroundColor: 'white',
+    color: '#1F2937',
+    fontSize: '14px'
+  }}
+>
+  <option value="">Select Chemical</option>
+  {[...inventory]
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map(item => (
+      <option key={item.id} value={item.name}>{item.name}</option>
+    ))}
+</select>
       </div>
       
  {/* Location Selection */}
