@@ -501,10 +501,12 @@ if (fileInputRef.current) {
     }}
   >
     <option value="">Select a Chemical</option>
-    {inventory.map(item => (
-      <option key={item.id} value={item.name}>{item.name}</option>
+    {[...inventory]
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(item => (
+        <option key={item.id} value={item.name}>{item.name}</option>
     ))}
-  </select>
+</select>
 </div>
 
   <div style={{ 
