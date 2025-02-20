@@ -1164,21 +1164,22 @@ if (fileInputRef.current) {
             </select>
           )}
           <input
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="Enter amount"
-            min="0"
-            style={{ 
-              flex: 1,
-              padding: '10px 12px', 
-              borderRadius: '6px', 
-              border: '1px solid #D1D5DB',
-              backgroundColor: 'white',
-              color: '#1F2937',
-              fontSize: '14px'
-            }}
-          />
+    type="number"
+    value={amount}
+    onChange={(e) => setAmount(e.target.value)}
+    placeholder="Enter amount"
+    min="0"
+    step="0.1"
+    style={{ 
+        flex: 1,
+        padding: '10px 12px', 
+        borderRadius: '6px', 
+        border: '1px solid #D1D5DB',
+        backgroundColor: 'white',
+        color: '#1F2937',
+        fontSize: '14px'
+    }}
+/>
           <select 
             value={unit}
             onChange={(e) => setUnit(e.target.value)}
@@ -1231,34 +1232,39 @@ if (fileInputRef.current) {
 
 {/* Notes Field */}
 <div style={{ 
-  marginBottom: '24px',
-  width: '50%'  // Make it take up only half the width
+  display: 'grid', 
+  gridTemplateColumns: '1fr 1fr', 
+  gap: '20px', 
+  marginBottom: '24px'
 }}>
-  <label style={{ 
-    display: 'block', 
-    marginBottom: '8px',
-    fontWeight: '500',
-    color: '#374151'
-  }}>
-    Notes
-  </label>
-  <textarea
-    value={notes}
-    onChange={(e) => setNotes(e.target.value)}
-    placeholder="Add any additional notes or comments"
-    style={{
-      width: '100%',
-      padding: '10px 12px',
-      borderRadius: '6px',
-      border: '1px solid #D1D5DB',
-      backgroundColor: 'white',
-      color: '#1F2937',
-      fontSize: '14px',
-      minHeight: '60px',  // Reduced height
-      maxHeight: '100px', // Added max height
-      resize: 'vertical'
-    }}
-  />
+  <div>  {/* Just use the first grid column */}
+    <label style={{ 
+      display: 'block', 
+      marginBottom: '8px',
+      fontWeight: '500',
+      color: '#374151'
+    }}>
+      Notes
+    </label>
+    <textarea
+      value={notes}
+      onChange={(e) => setNotes(e.target.value)}
+      placeholder="Add any additional notes or comments"
+      style={{
+        width: '100%',
+        padding: '10px 12px',
+        borderRadius: '6px',
+        border: '1px solid #D1D5DB',
+        backgroundColor: 'white',
+        color: '#1F2937',
+        fontSize: '14px',
+        minHeight: '60px',
+        maxHeight: '100px',
+        resize: 'vertical'
+      }}
+    />
+  </div>
+  <div></div> {/* Empty div to maintain grid layout */}
 </div>
 
 
